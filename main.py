@@ -1,9 +1,8 @@
-#WORKING CODE HOOKE JEEVES - FORMAT OUTPUT
-
 import tkinter as tk
 from tkinter import ttk
 import sympy as sp
 
+# check for the optimal value
 def check_optimum(n, exp, values):
     gradient = []
     v = 97
@@ -16,11 +15,11 @@ def check_optimum(n, exp, values):
             return 0
     return 1
 
+# pattern move
 def Pattern(n, A, X, exp):
     S = []
     for i in range(len(A)):
         S.append(A[i] - X[i])
-    # print(S)
     lam = sp.symbols('L')
     temp = ""
     for i in range(len(S)):
@@ -38,11 +37,8 @@ def Pattern(n, A, X, exp):
         t[i] = sp.sympify(t[i])  # Convert t[i] to symbolic expression using sympify
 
     aft = subvalues(n, exp, t)
-    # print("After : ", aft)
     dif = sp.diff(aft, lam)
- #   print(dif)
     lamb = sp.solve(dif)
-  #  print(lamb)
 
     if len(lamb) == 0:
         print("No solution found for the derivative.")
@@ -51,10 +47,9 @@ def Pattern(n, A, X, exp):
     res = []
     for i in t:
         res.append(i.subs(lam, lamb[0]))  # Use lamb[0] since solve returns a list of solutions
-   # print("Next point: ", res)
     return res
 
-
+# exploratory move
 def exploratory(n, exp, delta, start, i):
       v1 = subvalues(n,exp,start)
       s=start
@@ -63,9 +58,7 @@ def exploratory(n, exp, delta, start, i):
       v2 = subvalues(n,exp,t1)
       t2= list(start)
       t2[i] -= delta[i]
-      #print(t2)
       v3 = subvalues(n,exp,t2)
-      #print(v1,v2,v3)
       if min(v1,v2,v3)==v1 :
         return start
       elif min(v1,v2,v3)==v2 :
@@ -73,6 +66,7 @@ def exploratory(n, exp, delta, start, i):
       else :
         return t2
 
+# substituting the values
 def subvalues(n, exp, start):
     dt = {}
     v = 97
@@ -117,6 +111,7 @@ def run_optimization():
     result_optimum.set(", ".join([str(round(val, 2)) for val in prev_optimum]))
     result_value.set(str(subvalues(n, expression, prev_optimum)))
 
+# TKINTER WINDOW
 # Create the main window
 root = tk.Tk()
 root.title("Hook-Jeeves Optimization")
@@ -150,18 +145,6 @@ result_A = tk.StringVar()
 result_X = tk.StringVar()
 result_optimum = tk.StringVar()
 result_value = tk.StringVar()
-
-"""
-result_label_A = ttk.Label(root, text="A:")
-result_label_A.pack()
-result_display_A = ttk.Label(root, textvariable=result_A)
-result_display_A.pack()
-
-result_label_X = ttk.Label(root, text="X:")
-result_label_X.pack()
-result_display_X = ttk.Label(root, textvariable=result_X)
-result_display_X.pack()
-"""
 
 result_label_optimum = ttk.Label(root, text="Optimum Solution:")
 result_label_optimum.pack()
